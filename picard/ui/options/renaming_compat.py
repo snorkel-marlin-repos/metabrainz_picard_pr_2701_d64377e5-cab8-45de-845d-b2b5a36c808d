@@ -174,14 +174,13 @@ class NoDirectorySeparatorValidator(QtGui.QValidator):
 
 
 class WinCompatReplacementValidator(QtGui.QValidator):
-    # Allow any length, including whitespace, but forbid Windows-illegal characters and directory separators
-    _re_forbidden = re.compile(r'["*:<>?|/\\]')
+    _re_valid_win_replacement = re.compile(r'^[^"*:<>?|/\\\s]?$')
 
     def validate(self, text: str, pos):
-        if self._re_forbidden.search(text):
-            state = QtGui.QValidator.State.Invalid
-        else:
+        if self._re_valid_win_replacement.match(text):
             state = QtGui.QValidator.State.Acceptable
+        else:
+            state = QtGui.QValidator.State.Invalid
         return state, text, pos
 
 
